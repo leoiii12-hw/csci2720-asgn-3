@@ -4,23 +4,23 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/1155077469', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/1155077469', { useNewUrlParser: true });
 
 /**
  * Schema
  */
 const EventSchema = new mongoose.Schema({
-    eventId: {type: Number, required: true, unique: true},
-    name: {type: String, required: true},
-    loc: {type: Number},
-    quota: {type: Number}
+    eventId: { type: Number, required: true, unique: true },
+    name: { type: String, required: true },
+    loc: { type: Number },
+    quota: { type: Number }
 });
 const Event = mongoose.model('Event', EventSchema);
 
 const LocationSchema = new mongoose.Schema({
-    locId: {type: Number, required: true, unique: true},
-    name: {type: String, required: true},
-    quota: {type: Number}
+    locId: { type: Number, required: true, unique: true },
+    name: { type: String, required: true },
+    quota: { type: Number }
 });
 const Location = mongoose.model('Location', LocationSchema);
 
@@ -36,10 +36,10 @@ function start() {
     const app = express();
     const port = 3000;
 
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.urlencoded({ extended: true }));
 
     app.get('/event/:eventId', async (req, res) => {
-        const event = await Event.findOne({eventId: req.params.eventId}, ['eventId', 'name', 'loc', 'quota'].join(' '));
+        const event = await Event.findOne({ eventId: req.params.eventId }, ['eventId', 'name', 'loc', 'quota'].join(' '));
         if (!event) {
             res.status(400).send('Event not exist.');
             return;
@@ -49,7 +49,7 @@ function start() {
     });
 
     app.post('/event', async (req, res) => {
-        const location = await Location.findOne({locId: req.body['loc']}, ['locId', 'name', 'quota'].join(' '));
+        const location = await Location.findOne({ locId: req.body['loc'] }, ['locId', 'name', 'quota'].join(' '));
         if (!location) {
             res.status(400).send('Location not exist.');
             return;
@@ -59,7 +59,7 @@ function start() {
             return;
         }
 
-        const latestEvent = await Event.findOne({}, ['eventId'].join(' '), {sort: {eventId: -1}});
+        const latestEvent = await Event.findOne({}, ['eventId'].join(' '), { sort: { eventId: -1 } });
 
         const newEventId = latestEvent ? latestEvent.eventId + 1 : 1;
         const event = new Event({
@@ -75,13 +75,13 @@ function start() {
     });
 
     app.delete('/event/:eventId', async (req, res) => {
-        const event = await Event.findOne({eventId: req.params.eventId}, ['eventId', 'name', 'loc', 'quota'].join(' '));
+        const event = await Event.findOne({ eventId: req.params.eventId }, ['eventId', 'name', 'loc', 'quota'].join(' '));
         if (!event) {
             res.status(400).send('Event not exist.');
             return;
         }
 
-        await Event.deleteOne({eventId: req.params.eventId});
+        await Event.deleteOne({ eventId: req.params.eventId });
 
         res.status(200).send(`Event deleted.<br>${event['eventId']}<br>${event['name']}<br>${event['loc']}<br>${event['quota']}`);
     });
@@ -104,7 +104,7 @@ function start() {
             res.send(locations);
         } else {
             // List all the locations with quota of at least this number.
-            const locations = await Location.find({quota: {$gte: parseInt(quota)}}, ['locId', 'name', 'quota'].join(' '));
+            const locations = await Location.find({ quota: { $gte: parseInt(quota) } }, ['locId', 'name', 'quota'].join(' '));
 
             if (locations.length > 0)
                 res.send(locations);
@@ -115,18 +115,35 @@ function start() {
 
     // Show the details for this location ID.
     app.get('/loc/:locationId', async (req, res) => {
-        const location = await Location.findOne({locId: req.body['loc']}, ['locId', 'name', 'quota'].join(' '));
+        const location = await Location.findOne({ locId: req.params.locationId }, ['locId', 'name', 'quota'].join(' '));
         if (!location) {
             res.status(400).send('Location not exist.');
             return;
         }
 
-        res.send(`${event['locId']}<br>${event['name']}<br>${event['quota']}`);
+        res.send(`${location['locId']}<br>${location['name']}<br>${location['quota']}`);
+    });
+
+    // List all the events which has this event ID, or which are held at this location ID.
+    app.get('/event/:eventId/loc/:locationId', async (req, res) => {
+        if (!req.params.eventId || !req.params.locationId){
+            res.status(400).send('Invalid condition');
+            return;
+        }
+
+        let or = [
+            { eventId: req.params.eventId },
+            { loc: req.params.locationId }
+        ];
+
+        const events = await Event.find({ $or: or }, ['eventId', 'name', 'loc', 'quota'].join(' '));
+
+        res.send(events);
     });
 
     // Create a new location with the input from a user form.
     app.post('/loc', async (req, res) => {
-        const latestLocation = await Location.findOne({}, ['locId'].join(' '), {sort: {locId: -1}});
+        const latestLocation = await Location.findOne({}, ['locId'].join(' '), { sort: { locId: -1 } });
 
         const newLocationId = latestLocation ? latestLocation.locId + 1 : 1;
         const location = new Location({
