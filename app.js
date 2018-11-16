@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 mongoose.connect('mongodb://localhost/1155077469', { useNewUrlParser: true });
 
@@ -37,6 +38,7 @@ function start() {
     const port = 3000;
 
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(cors({ credentials: true, origin: 'http://localhost:63342' }));
 
     app.get('/event/:eventId', async (req, res) => {
         const event = await Event.findOne({ eventId: req.params.eventId }, ['eventId', 'name', 'loc', 'quota'].join(' '));
@@ -126,7 +128,7 @@ function start() {
 
     // List all the events which has this event ID, or which are held at this location ID.
     app.get('/event/:eventId/loc/:locationId', async (req, res) => {
-        if (!req.params.eventId || !req.params.locationId){
+        if (!req.params.eventId || !req.params.locationId) {
             res.status(400).send('Invalid condition');
             return;
         }

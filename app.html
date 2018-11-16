@@ -1,0 +1,218 @@
+<!-- Choi Man Kin 1155077469 -->
+<!DOCTYPE html>
+<html>
+<body>
+
+You can see all messages in the console.<br><br>
+
+<button onclick="postLoc()">POST http://localhost:3000/loc</button>
+<button onclick="postLoc()">POST http://localhost:3000/loc</button>
+<br>
+<br>
+
+<button onclick="postEvent()">POST http://localhost:3000/event</button>
+<br>
+<br>
+
+<button onclick="getEvent()">GET http://localhost:3000/event/1</button>
+<button onclick="getEvents()">GET http://localhost:3000/event</button>
+<br>
+<br>
+
+<button onclick="getLocations()">GET http://localhost:3000/loc</button>
+<button onclick="getQuota20()">GET http://localhost:3000/loc?quota=20</button>
+<button onclick="getQuota21()">GET http://localhost:3000/loc?quota=21</button>
+<button onclick="getLocation()">GET http://localhost:3000/loc/1</button>
+
+<br>
+<br>
+<button onclick="getEvent1OrLoc2()">GET http://localhost:3000/event/1/loc/2</button>
+<button onclick="delEvent()">DELETE http://localhost:3000/event/2</button>
+
+
+<script>
+    function getEvent() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/event/1");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function postEvent() {
+        var data = "name=CUHK%20Event&quota=20&loc=1";
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("POST", "http://localhost:3000/event");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function delEvent() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("DELETE", "http://localhost:3000/event/2");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getEvents() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/event");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getLocations() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/loc");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getQuota20() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/loc?quota=20");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getQuota21() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/loc?quota=21");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getLocation() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/loc/1");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function getEvent1OrLoc2() {
+        var data = null;
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("GET", "http://localhost:3000/event/1/loc/2");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+
+    function postLoc() {
+        var data = "name=CUHK&quota=20";
+
+        var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+                console.log(this.responseText);
+            }
+        });
+
+        xhr.open("POST", "http://localhost:3000/loc");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.setRequestHeader("cache-control", "no-cache");
+
+        xhr.send(data);
+    }
+</script>
+
+</body>
+</html>
